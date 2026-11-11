@@ -46,7 +46,7 @@ export default function RegisterScreen() {
   });
 
   const onSubmit = (_values: RegisterFormValues) => {
-    router.replace('/(tabs)' as Parameters<typeof router.replace>[0]);
+    router.replace('/(auth)/survey' as Parameters<typeof router.replace>[0]);
   };
 
   return (

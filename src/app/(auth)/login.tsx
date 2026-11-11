@@ -36,7 +36,7 @@ export default function LoginScreen() {
   });
 
   const onSubmit = (_values: LoginFormValues) => {
-    router.replace('/(tabs)' as Parameters<typeof router.replace>[0]);
+    router.replace('/(auth)/survey' as Parameters<typeof router.replace>[0]);
   };
 
   return (
@@ -111,9 +111,15 @@ export default function LoginScreen() {
             />
           </View>
 
-          <AppText variant="caption" color="primary" style={styles.forgotText}>
-            Quên mật khẩu?
-          </AppText>
+          <Pressable
+            onPress={() =>
+              router.replace('/(auth)/forgot-password' as Parameters<typeof router.replace>[0])
+            }
+          >
+            <AppText variant="caption" color="primary" style={styles.forgotText}>
+              Quên mật khẩu?
+            </AppText>
+          </Pressable>
 
           <Button
             label="Đăng nhập"

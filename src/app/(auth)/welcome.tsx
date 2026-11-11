@@ -1,55 +1,114 @@
 import { useRouter } from 'expo-router';
-import { StyleSheet, View } from 'react-native';
+import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { colors } from '@/core/theme/colors';
-import { radius } from '@/core/theme/radius';
 import { spacing } from '@/core/theme/spacing';
 import { AppText, Button, Icon } from '@/shared/components';
+
+const features = [
+  {
+    title: 'Quản lý tủ lạnh thông minh',
+    description: 'Cảnh báo hạn dùng trước 24h, tránh lãng phí',
+    tag: 'Tự động',
+    tagColor: '#E7F7F1',
+    icon: 'leaf',
+    iconColor: '#006C49',
+    iconBg: '#DDF7ED',
+  },
+  {
+    title: 'Món ngon giảm đến 70%',
+    description: 'Giải cứu combo bánh ngọt, cơm trưa nóng hổi',
+    tag: '-70%',
+    tagColor: '#FFF4D6',
+    icon: 'tag',
+    iconColor: '#7C4A00',
+    iconBg: '#FFF1CC',
+  },
+  {
+    title: 'Chia sẻ thực phẩm 0 đồng',
+    description: 'Tủ đồ cộng đồng mở 24/7, gắn kết sẻ chia',
+    tag: 'Cộng đồng',
+    tagColor: '#E0ECFF',
+    icon: 'gift',
+    iconColor: '#1D4ED8',
+    iconBg: '#E0ECFF',
+  },
+] as const;
 
 export default function WelcomeScreen() {
   const router = useRouter();
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
-      <View style={styles.background}>
-        <View style={styles.ambient1} />
-        <View style={styles.ambient2} />
-
-        <View style={styles.content}>
-          <View style={styles.logoShell}>
-            <View style={styles.logoBubble}>
-              <Icon name="leaf" family="material-community" size={30} color={colors.primary} />
-            </View>
-            <View style={styles.badge}>
-              <Icon name="sparkles" family="ionicons" size={18} color={colors.white} />
-            </View>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.headerWrapper}>
+          <View style={styles.brandBlock}>
+            <Image source={require('../../../assets/images/logo_ecosave.png')} style={styles.logo} resizeMode="contain" />
           </View>
 
-          <AppText variant="h1" color="white" style={styles.title}>
-            EcoSave
+          <AppText variant="h2" color="text" style={styles.heading}>
+            Chào mừng bạn đến với EcoSave
           </AppText>
 
-          <AppText variant="subhead" color="white" style={styles.subtitle}>
-            Tiết kiệm thực phẩm {'\n'}- Lan tỏa điều tốt
+          <AppText variant="body" color="textMuted" style={styles.subtitle}>
+            Cùng hàng ngàn người Việt quản lý tủ lạnh thông minh và giải cứu thực phẩm mỗi ngày.
           </AppText>
+        </View>
 
-          <View style={styles.indicatorRow}>
-            <View style={styles.indicatorActive} />
-            <View style={styles.indicatorInactive} />
-            <View style={styles.indicatorInactive} />
-          </View>
+        <View style={styles.heroCard}>
+          <Image source={require('../../../assets/images/welcome_hero.png')} style={styles.heroImage} resizeMode="cover" />
+        </View>
 
-          <View style={styles.ctaWrap}>
-            <Button
-              label="Bắt đầu"
-              variant="primary"
-              onPress={() => router.push('/(auth)/onboarding')}
-              style={styles.primaryButton}
-            />
+        <View style={styles.featureList}>
+          {features.map((feature) => (
+            <View key={feature.title} style={styles.featureRow}>
+              <View style={[styles.featureIconWrap, { backgroundColor: feature.iconBg }]}>
+                <Icon name={feature.icon} family="material-community" size={21} color={feature.iconColor} />
+              </View>
+
+              <View style={styles.featureTextGroup}>
+                <View style={styles.featureTitleRow}>
+                  <AppText variant="subhead" color="text" style={styles.featureTitle}>
+                    {feature.title}
+                  </AppText>
+
+                  <View style={[styles.featureTag, { backgroundColor: feature.tagColor }]}>
+                    <AppText variant="caption" color="text" style={styles.featureTagText}>
+                      {feature.tag}
+                    </AppText>
+                  </View>
+                </View>
+
+                <AppText variant="caption" color="textMuted" style={styles.featureDescription}>
+                  {feature.description}
+                </AppText>
+              </View>
+            </View>
+          ))}
+        </View>
+
+        <View style={styles.actionStack}>
+          <Button
+            label="Bắt đầu ngay"
+            variant="primary"
+            onPress={() => router.push('/(auth)/onboarding')}
+            style={styles.primaryButton}
+            rightIcon={<Icon name="arrow-right" family="material-community" size={18} color={colors.white} />}
+          />
+
+          <View style={styles.loginPromptRow}>
+            <AppText variant="body" color="textMuted">
+              Tôi đã có tài khoản
+            </AppText>
+            <Pressable onPress={() => router.push('/(auth)/login')}>
+              <AppText variant="body" color="primary" style={styles.loginLink}>
+                Đăng nhập
+              </AppText>
+            </Pressable>
           </View>
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -57,115 +116,119 @@ export default function WelcomeScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: colors.primary,
-  },
-  background: {
-    flex: 1,
-    backgroundColor: '#0F9C6B',
-    overflow: 'hidden',
-    justifyContent: 'center',
-  },
-  ambient1: {
-    position: 'absolute',
-    width: 260,
-    height: 260,
-    borderRadius: 130,
-    backgroundColor: 'rgba(255,255,255,0.12)',
-    top: -60,
-    right: -40,
-  },
-  ambient2: {
-    position: 'absolute',
-    width: 240,
-    height: 240,
-    borderRadius: 120,
-    backgroundColor: 'rgba(255,255,255,0.10)',
-    bottom: -80,
-    left: -50,
-  },
-  content: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: spacing.lg,
-    paddingBottom: spacing.xl,
-  },
-  logoShell: {
-    width: 180,
-    height: 180,
-    borderRadius: 90,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'rgba(255,255,255,0.18)',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.5)',
-    marginBottom: spacing.lg,
-  },
-  logoBubble: {
-    width: 138,
-    height: 138,
-    borderRadius: 69,
     backgroundColor: '#F8FAFC',
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.xl,
+    paddingBottom: spacing.xl,
+    gap: spacing.lg,
+  },
+  headerWrapper: {
+    alignItems: 'center',
+    gap: spacing.sm,
+  },
+  brandBlock: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: '#EAF4F1',
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.08,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 8 },
-    elevation: 6,
+    shadowRadius: 8,
+    elevation: 2,
   },
-  badge: {
-    position: 'absolute',
-    right: 18,
-    top: 22,
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    backgroundColor: '#F5AE3D',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 2,
-    borderColor: '#F8FAFC',
+  logo: {
+    width: 56,
+    height: 56,
   },
-  title: {
-    marginTop: spacing.sm,
+  heading: {
     textAlign: 'center',
     fontWeight: '700',
   },
   subtitle: {
     textAlign: 'center',
-    marginTop: spacing.xs,
-    fontWeight: '500',
-    opacity: 0.9,
+    maxWidth: 320,
   },
-  indicatorRow: {
+  heroCard: {
+    borderRadius: 20,
+    overflow: 'hidden',
+    backgroundColor: '#F0F3FF',
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+  },
+  heroImage: {
+    width: '100%',
+    height: 190,
+  },
+  featureList: {
+    gap: spacing.sm,
+  },
+  featureRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: spacing.sm,
+    backgroundColor: colors.surface,
+    borderRadius: 16,
+    padding: spacing.md,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 10,
+    elevation: 2,
+  },
+  featureIconWrap: {
+    width: 48,
+    height: 48,
+    borderRadius: 12,
+    alignItems: 'center',
     justifyContent: 'center',
-    marginTop: spacing.xl,
-    marginBottom: spacing.xl,
-    gap: 8,
   },
-  indicatorActive: {
-    width: 18,
-    height: 8,
+  featureTextGroup: {
+    flex: 1,
+    gap: 6,
+  },
+  featureTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: spacing.sm,
+  },
+  featureTitle: {
+    flex: 1,
+    fontWeight: '700',
+  },
+  featureTag: {
     borderRadius: 999,
-    backgroundColor: '#F8FAFC',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
   },
-  indicatorInactive: {
-    width: 8,
-    height: 8,
-    borderRadius: 999,
-    backgroundColor: 'rgba(255,255,255,0.4)',
+  featureTagText: {
+    fontWeight: '700',
+    textAlign: 'center',
   },
-  ctaWrap: {
-    width: '100%',
-    maxWidth: 320,
+  featureDescription: {
+    lineHeight: 18,
+  },
+  actionStack: {
+    gap: spacing.md,
+    marginTop: spacing.xs,
   },
   primaryButton: {
     minHeight: 54,
-    borderRadius: radius.lg,
-    backgroundColor: '#F8FAFC',
-    borderColor: '#F8FAFC',
+    borderRadius: 14,
+  },
+  loginPromptRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: spacing.xs,
+  },
+  loginLink: {
+    fontWeight: '700',
   },
 });
